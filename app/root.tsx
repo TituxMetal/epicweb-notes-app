@@ -12,10 +12,14 @@ import {
 } from '@remix-run/react'
 import { type ReactNode } from 'react'
 
+import faviconAssetUrl from '~/assets/favicon.svg'
+import fontStylesheetUrl from '~/styles/font.css'
 import tailwindStylesheetLink from '~/styles/tailwind.css'
 
 export const links: LinksFunction = () => {
   return [
+    { rel: 'icon', type: 'image/svg+xml', href: faviconAssetUrl },
+    { rel: 'stylesheet', href: fontStylesheetUrl },
     { rel: 'stylesheet', href: tailwindStylesheetLink },
     ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])
   ]
