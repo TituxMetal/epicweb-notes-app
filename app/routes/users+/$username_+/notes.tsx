@@ -36,6 +36,8 @@ const NotesRoute = () => {
                 <li key={note.id} className='p-1 pr-0'>
                   <NavLink
                     to={note.id}
+                    preventScrollReset
+                    prefetch='intent'
                     className={({ isActive }) =>
                       cn(navLinkDefaultClassName, isActive && 'bg-sky-700')
                     }
