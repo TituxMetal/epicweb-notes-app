@@ -74,8 +74,8 @@ const Document = ({ children }: { children: ReactNode }) => {
           </Link>
           <p>Built with ♥️ by {data.username}</p>
         </div>
-        <Scripts />
         <ScrollRestoration />
+        <Scripts />
         <LiveReload />
       </body>
     </html>
