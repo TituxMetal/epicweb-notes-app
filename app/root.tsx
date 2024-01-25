@@ -1,15 +1,18 @@
 import { cssBundleHref } from '@remix-run/css-bundle'
-import { type LinksFunction, type MetaFunction } from '@remix-run/node'
+import { json, type LinksFunction, type MetaFunction } from '@remix-run/node'
 import {
+  isRouteErrorResponse,
+  Link,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
+  useLoaderData,
   useRouteError
 } from '@remix-run/react'
+import os from 'node:os'
 import { type ReactNode } from 'react'
 
 import faviconAssetUrl from '~/assets/favicon.svg'
@@ -38,15 +41,39 @@ export const meta: MetaFunction = () => {
   ]
 }
 
+export const loader = async () => {
+  return json({ username: os.userInfo().username })
+}
+
 const Document = ({ children }: { children: ReactNode }) => {
+  const data = useLoaderData<typeof loader>()
+
   return (
-    <html lang='en'>
+    <html lang='en' className='h-full overflow-x-hidden'>
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className='flex h-full flex-col justify-between bg-gray-800 text-gray-50'>
+        <header className='container mx-auto py-6'>
+          <nav className='flex justify-between'>
+            <Link to='/'>
+              <div className='font-light'>epic</div>
+              <div className='font-bold'>notes</div>
+            </Link>
+            <Link className='underline' to='users/kody/notes'>
+              Kody's Notes
+            </Link>
+          </nav>
+        </header>
+        <div className='flex-1'>{children}</div>
+        <div className='container mx-auto flex items-center justify-between py-4'>
+          <Link to='/'>
+            <div className='font-light'>epic</div>
+            <div className='font-bold'>notes</div>
+          </Link>
+          <p>Built with ♥️ by {data.username}</p>
+        </div>
         <Scripts />
         <ScrollRestoration />
         <LiveReload />
@@ -58,9 +85,7 @@ const Document = ({ children }: { children: ReactNode }) => {
 const App = () => {
   return (
     <Document>
-      <main className='flex min-h-screen flex-col items-center justify-center space-y-4'>
-        <Outlet />
-      </main>
+      <Outlet />
     </Document>
   )
 }
