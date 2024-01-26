@@ -1,6 +1,8 @@
+import { conform, useForm } from '@conform-to/react'
+import { getFieldsetConstraint, parse } from '@conform-to/zod'
 import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
-import { useRef } from 'react'
+import { z } from 'zod'
 
 import {
   Button,
@@ -9,58 +11,27 @@ import {
   GeneralErrorBoundary,
   floatingToolbarClassName
 } from '~/components'
-import { db, invariantResponse, useFocusInvalid, useHydrated, useIsSubmitting } from '~/utils'
-
-type ActionError = {
-  formErrors: Array<string>
-  fieldErrors: {
-    title: Array<string>
-    content: Array<string>
-  }
-}
+import { db, invariantResponse, useIsSubmitting } from '~/utils'
 
 const titleMaxLength: number = 100
 const contentMaxLength: number = 1000
 
+const NoteEditorSchema = z.object({
+  title: z.string().min(1).max(titleMaxLength),
+  content: z.string().min(1).max(contentMaxLength)
+})
+
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+  invariantResponse(params.noteId, 'Note ID is required')
+
   const formData = await request.formData()
-  const title = formData.get('title')
-  const content = formData.get('content')
+  const submission = parse(formData, { schema: NoteEditorSchema })
 
-  invariantResponse(typeof title === 'string', 'Title must be a string')
-  invariantResponse(typeof content === 'string', 'Content must be a string')
-
-  const errors: ActionError = {
-    formErrors: [],
-    fieldErrors: {
-      title: [],
-      content: []
-    }
+  if (submission.intent !== 'submit' || !submission.value) {
+    return json({ submission } as const, { status: 400 })
   }
 
-  if (title === '') {
-    errors.fieldErrors.title.push('Title is required')
-  }
-
-  if (title.length > titleMaxLength) {
-    errors.fieldErrors.title.push(`Title must be ${titleMaxLength} characters or less`)
-  }
-
-  if (content === '') {
-    errors.fieldErrors.content.push('Content is required')
-  }
-
-  if (content.length > contentMaxLength) {
-    errors.fieldErrors.content.push(`Content must be ${contentMaxLength} characters or less`)
-  }
-
-  const hasErrors =
-    errors.formErrors.length ||
-    Object.values(errors.fieldErrors).some(fieldErrors => fieldErrors.length)
-
-  if (hasErrors) {
-    return json({ status: 'error', errors } as const, { status: 400 })
-  }
+  const { title, content } = submission.value
 
   db.note.update({ where: { id: { equals: params.noteId } }, data: { title, content } })
 
@@ -76,68 +47,48 @@ export const loader = ({ params }: LoaderFunctionArgs) => {
 }
 
 const NoteEditRoute = () => {
-  const data = useLoaderData<typeof loader>()
+  const { note } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
-  const formRef = useRef<HTMLFormElement>(null)
   const isSubmitting = useIsSubmitting()
-  const formId = 'note-editor'
 
-  const fieldErrors = actionData?.status === 'error' ? actionData.errors.fieldErrors : null
-  const formErrors = actionData?.status === 'error' ? actionData.errors.formErrors : null
-  const isHydrated = useHydrated()
-  const formHasErrors = Boolean(formErrors?.length)
-  const formErrorId = formHasErrors ? 'form-error' : undefined
-  const titleHasErrors = Boolean(fieldErrors?.title.length)
-  const titleErrorId = titleHasErrors ? 'title-error' : undefined
-  const contentHasErrors = Boolean(fieldErrors?.content.length)
-  const contentErrorId = contentHasErrors ? 'content-error' : undefined
-
-  useFocusInvalid(formRef.current, actionData?.status === 'error' && !isSubmitting)
+  const [form, fields] = useForm({
+    id: 'note-editor',
+    constraint: getFieldsetConstraint(NoteEditorSchema),
+    lastSubmission: actionData?.submission,
+    shouldRevalidate: 'onBlur',
+    onValidate({ formData }) {
+      return parse(formData, { schema: NoteEditorSchema })
+    },
+    defaultValue: { ...note }
+  })
 
   return (
     <Form
-      ref={formRef}
-      tabIndex={-1}
       method='post'
-      noValidate={isHydrated}
-      aria-invalid={formHasErrors || undefined}
-      aria-describedby={formErrorId}
       className='flex h-full flex-col gap-y-4 overflow-x-hidden px-8 py-12'
+      {...form.props}
     >
       <fieldset className='flex flex-col gap-4 rounded-lg bg-sky-700 p-4'>
         <FormField>
-          <FormField.Label htmlFor='note-title'>Title</FormField.Label>
-          <FormField.Input
-            type='text'
-            name='title'
-            id='note-title'
-            autoFocus
-            defaultValue={data.note.title}
-            maxLength={titleMaxLength}
-            aria-invalid={titleHasErrors || undefined}
-            aria-describedby={titleErrorId}
-          />
-          {fieldErrors?.title && (
-            <ErrorList listId={titleErrorId} errorMessages={fieldErrors.title} />
+          <FormField.Label htmlFor={fields.title.id}>Title</FormField.Label>
+          <FormField.Input {...conform.input(fields.title, { type: 'text' })} />
+          {fields.title.errors && (
+            <ErrorList listId={fields.title.errorId} errorMessages={fields.title.errors} />
           )}
         </FormField>
         <FormField>
-          <FormField.Label htmlFor='note-content'>Content</FormField.Label>
+          <FormField.Label htmlFor={fields.content.id}>Content</FormField.Label>
           <FormField.Textarea
-            name='content'
-            id='note-content'
-            defaultValue={data.note.content}
-            maxLength={contentMaxLength}
-            aria-invalid={contentHasErrors || undefined}
-            aria-describedby={contentErrorId}
+            {...conform.textarea(fields.content)}
+            defaultValue={fields.content.defaultValue}
           />
-          {fieldErrors?.content && (
-            <ErrorList listId={contentErrorId} errorMessages={fieldErrors.content} />
+          {fields.content.errors && (
+            <ErrorList listId={fields.content.errorId} errorMessages={fields.content.errors} />
           )}
         </FormField>
-        {formErrors && <ErrorList listId={formErrorId} errorMessages={formErrors} />}
+        {form.error && <ErrorList listId={form.errorId} errorMessages={form.errors} />}
         <div className={floatingToolbarClassName}>
-          <Button form={formId} type='reset' intent='destructive'>
+          <Button form={form.id} type='reset' intent='destructive'>
             Reset
           </Button>
           <Button disabled={isSubmitting} type='submit' intent='base'>
