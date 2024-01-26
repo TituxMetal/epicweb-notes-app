@@ -4,23 +4,14 @@ import { cn } from '~/utils'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string
-  defaultValue: string
-  id: string
-  name: string
-  required?: boolean
-  type?: string
 }
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
-  htmlFor: string
+  htmlFor?: string
 }
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string
-  defaultValue: string
-  id: string
-  name: string
-  required?: boolean
 }
 
 interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,34 +40,19 @@ const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
   }
 )
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ name, type, defaultValue, className, required, ...rest }, ref) => {
-    return (
-      <input
-        {...rest}
-        ref={ref}
-        type={type}
-        name={name}
-        className={cn(defaultInputClassNames, className)}
-        defaultValue={defaultValue}
-        required={required}
-      />
-    )
-  }
-)
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...rest }, ref) => {
+  return <input {...rest} ref={ref} className={cn(defaultInputClassNames, className)} />
+})
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, defaultValue, name, required, ...rest }, ref) => {
+  ({ className, ...rest }, ref) => {
     const defaultClassNames = 'min-h-40'
 
     return (
       <textarea
         {...rest}
         ref={ref}
-        name={name}
         className={cn(defaultInputClassNames, defaultClassNames, className)}
-        defaultValue={defaultValue}
-        required={required}
       />
     )
   }
