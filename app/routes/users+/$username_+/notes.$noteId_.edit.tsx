@@ -1,7 +1,7 @@
 import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useLoaderData } from '@remix-run/react'
 
-import { Button, FormField, floatingToolbarClassName } from '~/components'
+import { Button, FormField, GeneralErrorBoundary, floatingToolbarClassName } from '~/components'
 import { db, invariantResponse, useIsSubmitting } from '~/utils'
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -50,6 +50,14 @@ const NoteEditRoute = () => {
         </div>
       </fieldset>
     </Form>
+  )
+}
+
+export const ErrorBoundary = () => {
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{ 404: ({ params }) => <p>No note with the ID "{params.noteId}" exists.</p> }}
+    />
   )
 }
 
