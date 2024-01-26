@@ -1,6 +1,7 @@
 import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { Link, NavLink, Outlet, useLoaderData } from '@remix-run/react'
 
+import { GeneralErrorBoundary } from '~/components'
 import { cn, db, invariantResponse } from '~/utils'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -54,6 +55,16 @@ const NotesRoute = () => {
         </div>
       </div>
     </main>
+  )
+}
+
+export const ErrorBoundary = () => {
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{
+        404: ({ params }) => <p>No user with the username "{params.username}" exists.</p>
+      }}
+    />
   )
 }
 
