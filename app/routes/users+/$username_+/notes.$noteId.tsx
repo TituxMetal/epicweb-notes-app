@@ -7,7 +7,7 @@ import {
 } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 
-import { Button, floatingToolbarClassName } from '~/components'
+import { Button, GeneralErrorBoundary, floatingToolbarClassName } from '~/components'
 import { db, invariantResponse } from '~/utils'
 
 import { type loader as notesLoader } from './notes'
@@ -69,6 +69,14 @@ const NoteRoute = () => {
         </Button>
       </div>
     </div>
+  )
+}
+
+export const ErrorBoundary = () => {
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{ 404: ({ params }) => <p>No note with the id "{params.noteId}" exists</p> }}
+    />
   )
 }
 
