@@ -31,13 +31,7 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction = () => {
   return [
     { title: 'Epic Web Notes App' },
-    { name: 'charset', content: 'utf-8' },
-    {
-      name: 'description',
-      content:
-        'A note-taking application developed following the Epic Web Dev workshops, created by Kent C. Dodds. This project will include everything I learned from the 5 workshops.'
-    },
-    { name: 'viewport', content: 'width=device-width,initial-scale=1' }
+    { name: 'description', content: `Your own captain's log.` }
   ]
 }
 
@@ -52,6 +46,8 @@ const Document = ({ children }: { children: ReactNode }) => {
     <html lang='en' className='h-full overflow-x-hidden'>
       <head>
         <Meta />
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='width=device-width,initial-scale=1' />
         <Links />
       </head>
       <body className='flex h-full flex-col justify-between bg-gray-800 text-gray-50'>
