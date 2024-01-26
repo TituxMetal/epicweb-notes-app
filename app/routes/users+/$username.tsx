@@ -1,7 +1,15 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
 import { db, invariantResponse } from '~/utils'
+
+export const meta: MetaFunction<typeof loader> = ({ data, params }) => {
+  const displayName = data?.user.name ?? params.username
+  return [
+    { title: `${displayName} | Epic Notes App` },
+    { name: 'description', content: `Profile of ${displayName} on Epic Notes.` }
+  ]
+}
 
 export const loader = ({ params }: LoaderFunctionArgs) => {
   const user = db.user.findFirst({ where: { username: { equals: params.username } } })
