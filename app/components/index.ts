@@ -1,4 +1,5 @@
 export { Button, type ButtonProps } from './Button'
+export { ErrorList } from './ErrorList'
 export { FormField } from './FormField'
 export { GeneralErrorBoundary } from './GeneralErrorBoundary'
 export { floatingToolbarClassName } from './floating-toolbar'
