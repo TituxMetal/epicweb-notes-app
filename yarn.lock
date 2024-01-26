@@ -382,6 +382,23 @@
   dependencies:
     statuses "^2.0.1"
 
+"@conform-to/dom@0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@conform-to/dom/-/dom-0.9.1.tgz#6ea8a218ce47e38e09b94a60ec85381206c5a40e"
+  integrity sha512-+T6QgpLDPZ29j4y5nWW61WMe8qj0cQBymyzbi5sq1f3CcBO3wBbR0VPI7mbm+rLoErHWM3ghhdNlIkw0UPoLLA==
+
+"@conform-to/react@0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@conform-to/react/-/react-0.9.1.tgz#343d2aa03b9a0d004efb0896c08443e60789ced7"
+  integrity sha512-SibYHk86IFh60LRPk4aJHJOgyLTgb3JYphKvG4vcemyuntdOwncd5YM/GDoccVzeCTmJi4Os/fDtOOAaDcSa9w==
+  dependencies:
+    "@conform-to/dom" "0.9.1"
+
+"@conform-to/zod@0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@conform-to/zod/-/zod-0.9.1.tgz#63014db3d2ce701d7b9e174308cc735530de7760"
+  integrity sha512-4hWBGzRpSd4RrlBFRXjS6QQ2MWFpMZDbDwz8H/xiq38Xl5yaL1RSZMhOJ4pmsmy8CIKghs78qvaD8ltTFlrNvQ==
+
 "@emotion/hash@^0.9.0":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.9.1.tgz#4ffb0055f7ef676ebc3a5a91fb621393294e2f43"
@@ -6768,6 +6785,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
 
 zwitch@^2.0.0:
   version "2.0.4"
