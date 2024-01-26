@@ -1,5 +1,6 @@
 import { useFormAction, useNavigation } from '@remix-run/react'
 import { clsx, type ClassValue } from 'clsx'
+import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 /**
@@ -42,4 +43,12 @@ export const useIsSubmitting = ({
     navigation.formAction === (formAction ?? contextualFormAction) &&
     navigation.formMethod === formMethod
   )
+}
+
+export const useHydrated = () => {
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => setHydrated(true), [])
+
+  return hydrated
 }
