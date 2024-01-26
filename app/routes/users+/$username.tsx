@@ -1,6 +1,7 @@
 import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
+import { GeneralErrorBoundary } from '~/components'
 import { db, invariantResponse } from '~/utils'
 
 export const meta: MetaFunction<typeof loader> = ({ data, params }) => {
@@ -29,6 +30,16 @@ const ProfileRoute = () => {
         Notes
       </Link>
     </div>
+  )
+}
+
+export const ErrorBoundary = () => {
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{
+        404: ({ params }) => <p>No user with the username "{params.username}" exists.</p>
+      }}
+    />
   )
 }
 
