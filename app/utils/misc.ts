@@ -1,54 +1,35 @@
-import { useFormAction, useNavigation } from '@remix-run/react'
 import { clsx, type ClassValue } from 'clsx'
-import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 /**
  * A handy utility that makes constructing class names easier.
  * It also merges tailwind classes.
+ *
+ * @param inputs - Tailwind classes to merge
  */
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * Gets an error message string from an error object.
+ * If error is a string, returns the string.
+ * If error is an object with a 'message' string property, returns that.
+ * Otherwise logs the error and returns a generic message.
+ *
+ * @param error - The error object to get the message from
+ */
 export const getErrorMessage = (error: unknown) => {
   if (typeof error === 'string') return error
   if (
     error &&
     typeof error === 'object' &&
     'message' in error &&
-    typeof error.message === 'string'
+    typeof (error as { message: unknown }).message === 'string'
   ) {
-    return error.message
+    return (error as { message: string }).message
   }
   console.error('Unable to get error message for error', error)
+
   return 'Unknown Error'
-}
-
-/**
- * Returns true if the current navigation is submitting the current route's
- * form. Defaults to the current route's form action and method POST.
- */
-export const useIsSubmitting = ({
-  formAction,
-  formMethod = 'POST'
-}: {
-  formAction?: string
-  formMethod?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE'
-} = {}) => {
-  const contextualFormAction = useFormAction()
-  const navigation = useNavigation()
-  return (
-    navigation.state === 'submitting' &&
-    navigation.formAction === (formAction ?? contextualFormAction) &&
-    navigation.formMethod === formMethod
-  )
-}
-
-export const useHydrated = () => {
-  const [hydrated, setHydrated] = useState(false)
-
-  useEffect(() => setHydrated(true), [])
-
-  return hydrated
 }
