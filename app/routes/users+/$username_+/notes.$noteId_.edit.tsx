@@ -1,5 +1,6 @@
 import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { useRef } from 'react'
 
 import {
   Button,
@@ -8,7 +9,7 @@ import {
   GeneralErrorBoundary,
   floatingToolbarClassName
 } from '~/components'
-import { db, invariantResponse, useHydrated, useIsSubmitting } from '~/utils'
+import { db, invariantResponse, useFocusInvalid, useHydrated, useIsSubmitting } from '~/utils'
 
 type ActionError = {
   formErrors: Array<string>
@@ -18,8 +19,8 @@ type ActionError = {
   }
 }
 
-const titleMaxLength = 100
-const contentMaxLength = 1000
+const titleMaxLength: number = 100
+const contentMaxLength: number = 1000
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const formData = await request.formData()
@@ -77,43 +78,66 @@ export const loader = ({ params }: LoaderFunctionArgs) => {
 const NoteEditRoute = () => {
   const data = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
+  const formRef = useRef<HTMLFormElement>(null)
   const isSubmitting = useIsSubmitting()
+  const formId = 'note-editor'
 
   const fieldErrors = actionData?.status === 'error' ? actionData.errors.fieldErrors : null
   const formErrors = actionData?.status === 'error' ? actionData.errors.formErrors : null
   const isHydrated = useHydrated()
+  const formHasErrors = Boolean(formErrors?.length)
+  const formErrorId = formHasErrors ? 'form-error' : undefined
+  const titleHasErrors = Boolean(fieldErrors?.title.length)
+  const titleErrorId = titleHasErrors ? 'title-error' : undefined
+  const contentHasErrors = Boolean(fieldErrors?.content.length)
+  const contentErrorId = contentHasErrors ? 'content-error' : undefined
+
+  useFocusInvalid(formRef.current, actionData?.status === 'error' && !isSubmitting)
 
   return (
     <Form
+      ref={formRef}
+      tabIndex={-1}
       method='post'
       noValidate={isHydrated}
+      aria-invalid={formHasErrors || undefined}
+      aria-describedby={formErrorId}
       className='flex h-full flex-col gap-y-4 overflow-x-hidden px-8 py-12'
     >
       <fieldset className='flex flex-col gap-4 rounded-lg bg-sky-700 p-4'>
         <FormField>
-          <FormField.Label htmlFor='title'>Title</FormField.Label>
+          <FormField.Label htmlFor='note-title'>Title</FormField.Label>
           <FormField.Input
             type='text'
             name='title'
-            id='title'
+            id='note-title'
+            autoFocus
             defaultValue={data.note.title}
             maxLength={titleMaxLength}
+            aria-invalid={titleHasErrors || undefined}
+            aria-describedby={titleErrorId}
           />
-          {fieldErrors?.title && <ErrorList errors={fieldErrors.title} />}
+          {fieldErrors?.title && (
+            <ErrorList listId={titleErrorId} errorMessages={fieldErrors.title} />
+          )}
         </FormField>
         <FormField>
-          <FormField.Label htmlFor='content'>Content</FormField.Label>
+          <FormField.Label htmlFor='note-content'>Content</FormField.Label>
           <FormField.Textarea
             name='content'
-            id='content'
+            id='note-content'
             defaultValue={data.note.content}
             maxLength={contentMaxLength}
+            aria-invalid={contentHasErrors || undefined}
+            aria-describedby={contentErrorId}
           />
-          {fieldErrors?.content && <ErrorList errors={fieldErrors.content} />}
+          {fieldErrors?.content && (
+            <ErrorList listId={contentErrorId} errorMessages={fieldErrors.content} />
+          )}
         </FormField>
-        {formErrors && <ErrorList errors={formErrors} />}
+        {formErrors && <ErrorList listId={formErrorId} errorMessages={formErrors} />}
         <div className={floatingToolbarClassName}>
-          <Button type='reset' intent='destructive'>
+          <Button form={formId} type='reset' intent='destructive'>
             Reset
           </Button>
           <Button disabled={isSubmitting} type='submit' intent='base'>
