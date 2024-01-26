@@ -1,13 +1,14 @@
 type ErrorListProps = {
-  errors?: Array<string> | null
+  listId?: string
+  errorMessages?: string[] | null
 }
 
-export const ErrorList = ({ errors }: ErrorListProps) => {
-  return errors?.length ? (
-    <ul className='flex flex-col gap-1'>
-      {errors.map((error, index) => (
+export const ErrorList = ({ listId, errorMessages }: ErrorListProps): JSX.Element | null => {
+  return errorMessages?.length ? (
+    <ul id={listId} className='flex flex-col gap-1'>
+      {errorMessages.map((errorMessage, index) => (
         <li key={index} className='text-lg font-bold text-rose-300'>
-          {error}
+          {errorMessage}
         </li>
       ))}
     </ul>
