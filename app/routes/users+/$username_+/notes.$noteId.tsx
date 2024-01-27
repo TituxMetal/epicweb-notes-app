@@ -6,9 +6,10 @@ import {
   type MetaFunction
 } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
+import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
 
 import { Button, GeneralErrorBoundary, floatingToolbarClassName } from '~/components'
-import { db, invariantResponse } from '~/utils'
+import { db, invariantResponse, validateCSRF } from '~/utils'
 
 import { type loader as notesLoader } from './notes'
 
@@ -32,9 +33,12 @@ export const meta: MetaFunction<
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const formData = await request.formData()
+
+  await validateCSRF(formData, request.headers)
+
   const intent = formData.get('intent')
 
-  invariantResponse(intent === 'delete', 'Invalid intent')
+  invariantResponse(intent !== 'delete', 'Invalid intent')
 
   db.note.delete({ where: { id: { equals: params.noteId } } })
 
@@ -79,6 +83,7 @@ const NoteRoute = () => {
       </div>
       <div className={floatingToolbarClassName}>
         <Form method='post'>
+          <AuthenticityTokenInput />
           <Button type='submit' intent='destructive'>
             Delete
           </Button>
