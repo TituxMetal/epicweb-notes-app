@@ -1,5 +1,10 @@
 import { cssBundleHref } from '@remix-run/css-bundle'
-import { json, type LinksFunction, type MetaFunction } from '@remix-run/node'
+import {
+  json,
+  type LinksFunction,
+  type LoaderFunctionArgs,
+  type MetaFunction
+} from '@remix-run/node'
 import {
   Link,
   Links,
@@ -12,6 +17,7 @@ import {
 } from '@remix-run/react'
 import os from 'node:os'
 import { type ReactNode } from 'react'
+import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 
 import faviconAssetUrl from '~/assets/favicon.svg'
@@ -19,7 +25,7 @@ import fontStylesheetUrl from '~/styles/font.css'
 import tailwindStylesheetLink from '~/styles/tailwind.css'
 
 import { GeneralErrorBoundary } from './components'
-import { honeypot } from './utils'
+import { csrf, honeypot } from './utils'
 
 export const links: LinksFunction = () => {
   return [
@@ -37,10 +43,14 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const honeyProps = honeypot.getInputProps()
+  const [csrfToken, csrfCookieHeader] = await csrf.commitToken(request)
 
-  return json({ username: os.userInfo().username, honeyProps })
+  return json(
+    { username: os.userInfo().username, honeyProps, csrfToken },
+    { headers: csrfCookieHeader ? { 'set-cookie': csrfCookieHeader } : {} }
+  )
 }
 
 const Document = ({ children }: { children: ReactNode }) => {
@@ -73,8 +83,8 @@ const App = () => {
             <div className='font-light'>epic</div>
             <div className='font-bold'>notes</div>
           </Link>
-          <Link className='underline' to='/signup'>
-            Signup
+          <Link className='underline' to='/users/kody/notes'>
+            Kody's Notes
           </Link>
         </nav>
       </header>
@@ -96,9 +106,11 @@ const AppWithProviders = () => {
   const data = useLoaderData<typeof loader>()
 
   return (
-    <HoneypotProvider {...data.honeyProps}>
-      <App />
-    </HoneypotProvider>
+    <AuthenticityTokenProvider token={data.csrfToken}>
+      <HoneypotProvider {...data.honeyProps}>
+        <App />
+      </HoneypotProvider>
+    </AuthenticityTokenProvider>
   )
 }
 
