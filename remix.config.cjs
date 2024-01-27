@@ -6,6 +6,7 @@ module.exports = {
   ignoredRouteFiles: ['**/.*'],
   appDirectory: 'app',
   serverModuleFormat: 'esm',
+  serverDependenciesToBundle: [/^remix-utils.*/, 'crypto-js'],
   tailwind: true,
   postcss: true,
   watchPaths: ['./tailwind.config.ts'],
