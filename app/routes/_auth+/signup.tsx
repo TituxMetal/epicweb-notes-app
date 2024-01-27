@@ -1,9 +1,10 @@
 import { redirect, type ActionFunctionArgs, type MetaFunction } from '@remix-run/node'
 import { Form } from '@remix-run/react'
+import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
 import { HoneypotInputs } from 'remix-utils/honeypot/react'
 
 import { Button, FormField } from '~/components'
-import { checkHoneypot } from '~/utils'
+import { checkHoneypot, validateCSRF } from '~/utils'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Setup Epic Notes Account' }]
@@ -12,6 +13,7 @@ export const meta: MetaFunction = () => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
+  await validateCSRF(formData, request.headers)
   checkHoneypot(formData)
 
   return redirect('/')
@@ -26,6 +28,7 @@ const SignupRoute = () => {
           <p className='text-base text-gray-200'>Please enter your details.</p>
         </div>
         <Form method='POST' className='mx-auto flex min-w-80 max-w-sm flex-col gap-4'>
+          <AuthenticityTokenInput />
           <HoneypotInputs />
           <FormField>
             <FormField.Label htmlFor='email-input'>Email</FormField.Label>
