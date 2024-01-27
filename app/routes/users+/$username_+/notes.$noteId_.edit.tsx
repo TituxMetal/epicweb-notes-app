@@ -10,6 +10,7 @@ import {
   type LoaderFunctionArgs
 } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
 import { z } from 'zod'
 
 import {
@@ -22,7 +23,7 @@ import {
   MAX_UPLOAD_SIZE,
   floatingToolbarClassName
 } from '~/components'
-import { db, invariantResponse, updateNote, useIsSubmitting } from '~/utils'
+import { db, invariantResponse, updateNote, useIsSubmitting, validateCSRF } from '~/utils'
 
 const titleMaxLength: number = 100
 const contentMaxLength: number = 1000
@@ -40,6 +41,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     request,
     createMemoryUploadHandler({ maxPartSize: MAX_UPLOAD_SIZE })
   )
+
+  await validateCSRF(formData, request.headers)
+
   const submission = parse(formData, { schema: NoteEditorSchema })
 
   if (submission.intent !== 'submit') {
@@ -99,6 +103,7 @@ const NoteEditRoute = () => {
       encType='multipart/form-data'
       {...form.props}
     >
+      <AuthenticityTokenInput />
       <button type='submit' className='hidden' />
       <fieldset className='flex flex-col gap-4 rounded-lg bg-sky-700 p-4'>
         <FormField>
