@@ -46,7 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...re
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...rest }, ref) => {
-    const defaultClassNames = 'min-h-40'
+    const defaultClassNames = 'min-h-20'
 
     return (
       <textarea
