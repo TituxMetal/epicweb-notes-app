@@ -33,7 +33,6 @@ export const ImageChooser = ({ config }: ImageChooserProps) => {
     existingImage ? `/resources/images/${fields.id.defaultValue}` : null
   )
   const [altText, setAltText] = useState(fields.altText.defaultValue || '')
-  console.log('previewImage', { previewImage })
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
