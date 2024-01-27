@@ -12,12 +12,14 @@ import {
 } from '@remix-run/react'
 import os from 'node:os'
 import { type ReactNode } from 'react'
+import { HoneypotProvider } from 'remix-utils/honeypot/react'
 
 import faviconAssetUrl from '~/assets/favicon.svg'
 import fontStylesheetUrl from '~/styles/font.css'
 import tailwindStylesheetLink from '~/styles/tailwind.css'
 
 import { GeneralErrorBoundary } from './components'
+import { honeypot } from './utils'
 
 export const links: LinksFunction = () => {
   return [
@@ -36,7 +38,9 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = async () => {
-  return json({ username: os.userInfo().username })
+  const honeyProps = honeypot.getInputProps()
+
+  return json({ username: os.userInfo().username, honeyProps })
 }
 
 const Document = ({ children }: { children: ReactNode }) => {
@@ -69,8 +73,8 @@ const App = () => {
             <div className='font-light'>epic</div>
             <div className='font-bold'>notes</div>
           </Link>
-          <Link className='underline' to='users/kody/notes'>
-            Kody's Notes
+          <Link className='underline' to='/signup'>
+            Signup
           </Link>
         </nav>
       </header>
@@ -88,6 +92,16 @@ const App = () => {
   )
 }
 
+const AppWithProviders = () => {
+  const data = useLoaderData<typeof loader>()
+
+  return (
+    <HoneypotProvider {...data.honeyProps}>
+      <App />
+    </HoneypotProvider>
+  )
+}
+
 export const ErrorBoundary = () => {
   return (
     <Document>
@@ -98,4 +112,4 @@ export const ErrorBoundary = () => {
   )
 }
 
-export default App
+export default AppWithProviders
