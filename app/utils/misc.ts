@@ -1,6 +1,16 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import userFallback from '~/assets/user.png'
+
+export const getNoteImgSrc = (imageId: string) => {
+  return `/resources/note-images/${imageId}`
+}
+
+export const getUserImgSrc = (imageId?: string | null) => {
+  return imageId ? `/resources/user-images/${imageId}` : userFallback
+}
+
 /**
  * A handy utility that makes constructing class names easier.
  * It also merges tailwind classes.
