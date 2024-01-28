@@ -3,7 +3,7 @@ import { PlusIcon } from '@heroicons/react/24/outline'
 import { useRef, useState } from 'react'
 import { z } from 'zod'
 
-import { cn } from '~/utils'
+import { cn, getNoteImgSrc } from '~/utils'
 
 import { FormField } from './FormField'
 
@@ -30,7 +30,7 @@ export const ImageChooser = ({ config }: ImageChooserProps) => {
   const fields = useFieldset(ref, config)
   const existingImage = Boolean(fields.id.defaultValue)
   const [previewImage, setPreviewImage] = useState<string | null>(
-    existingImage ? `/resources/images/${fields.id.defaultValue}` : null
+    fields.id.defaultValue ? getNoteImgSrc(fields.id.defaultValue) : null
   )
   const [altText, setAltText] = useState(fields.altText.defaultValue || '')
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
