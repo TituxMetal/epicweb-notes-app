@@ -9,7 +9,7 @@ import { Form, Link, useLoaderData } from '@remix-run/react'
 import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
 
 import { Button, GeneralErrorBoundary, floatingToolbarClassName } from '~/components'
-import { db, invariantResponse, validateCSRF } from '~/utils'
+import { db, getNoteImgSrc, invariantResponse, prisma, validateCSRF } from '~/utils'
 
 import { type loader as notesLoader } from './notes'
 
@@ -46,7 +46,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 }
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const note = db.note.findFirst({ where: { id: { equals: params.noteId } } })
+  const note = await prisma.note.findUnique({
+    select: { title: true, content: true, images: { select: { id: true, altText: true } } },
+    where: { id: params.noteId }
+  })
 
   invariantResponse(note, 'Note not found', { status: 404 })
 
@@ -69,9 +72,9 @@ const NoteRoute = () => {
         <ul className='flex flex-wrap gap-5 py-5'>
           {data.note.images.map(image => (
             <li key={image.id}>
-              <a href={`/resources/images/${image.id}`}>
+              <a href={getNoteImgSrc(image.id)}>
                 <img
-                  src={`/resources/images/${image.id}`}
+                  src={getNoteImgSrc(image.id)}
                   alt={image.altText ?? ''}
                   className='h-32 w-32 rounded-lg object-cover'
                 />
