@@ -661,6 +661,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
+"@faker-js/faker@8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-8.4.0.tgz#dc09924ee5fa6438eaaa49d0a8820c64d2f8518f"
+  integrity sha512-htW87352wzUCdX1jyUQocUcmAaFqcR/w082EC8iP/gtkF0K+aKcBp0hR5Arb7dzR8tQ1TrhE9DNa5EbJELm84w==
+
 "@flydotio/dockerfile@0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@flydotio/dockerfile/-/dockerfile-0.5.0.tgz#e236f9a370cd635b2daaba1cbc7d3dcde9f4a6bf"
@@ -2439,6 +2444,11 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   integrity sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==
   dependencies:
     once "^1.4.0"
+
+enforce-unique@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/enforce-unique/-/enforce-unique-1.2.0.tgz#724295f8072b2ce032382b24a0ab40d8539e5861"
+  integrity sha512-ZBusLJB8QQhKMGNOlwARgov+s38rwPbhcifGlhEHqnGHcA8CCSEgbLujdABtpWwZyYnude4t5fviuEmSuV8Hig==
 
 enhanced-resolve@^5.12.0:
   version "5.15.0"
