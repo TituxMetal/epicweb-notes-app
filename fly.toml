@@ -1,12 +1,16 @@
-# fly.toml app configuration file generated for epicweb-notes-app on 2024-01-24T09:52:44+01:00
+# fly.toml app configuration file generated for epicweb-notes-app on 2024-01-28T10:49:17+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "epicweb-notes-app"
-primary_region = "lax"
+app = 'epicweb-notes-app'
+primary_region = 'lax'
 
 [build]
+
+[[mounts]]
+  source = 'data'
+  destination = '/data'
 
 [http_service]
   internal_port = 3000
@@ -14,9 +18,9 @@ primary_region = "lax"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
 
 [[vm]]
-  cpu_kind = "shared"
+  cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 256
+  memory_mb = 512
