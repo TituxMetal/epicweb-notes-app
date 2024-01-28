@@ -4,13 +4,14 @@
 #
 
 app = 'epicweb-notes-app'
-primary_region = 'lax'
+primary_region = 'cdg'
 
 [build]
 
 [[mounts]]
   source = 'data'
   destination = '/data'
+  initial_size = '1gb'
 
 [http_service]
   internal_port = 3000
