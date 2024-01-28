@@ -1,6 +1,7 @@
 import { conform, list, useFieldList, useForm } from '@conform-to/react'
 import { getFieldsetConstraint, parse } from '@conform-to/zod'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { createId as cuid } from '@paralleldrive/cuid2'
 import {
   unstable_createMemoryUploadHandler as createMemoryUploadHandler,
   json,
@@ -48,7 +49,8 @@ const NoteEditorSchema = z.object({
 })
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  invariantResponse(params.noteId, 'Note ID is required')
+  const { noteId } = params
+  invariantResponse(noteId, 'Note ID is required')
 
   const formData = await parseMultipartFormData(
     request,
@@ -95,6 +97,25 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!submission.value) {
     return json({ status: 'error', submission } as const, { status: 400 })
   }
+
+  const { title, content, imageUpdates = [], newImages = [] } = submission.value
+
+  await prisma.note.update({
+    select: { id: true },
+    where: { id: noteId },
+    data: {
+      title,
+      content,
+      images: {
+        deleteMany: { id: { notIn: imageUpdates.map(img => img.id) } },
+        updateMany: imageUpdates.map(updates => ({
+          where: { id: updates.id },
+          data: { ...updates, id: updates.blob ? cuid() : updates.id }
+        })),
+        create: newImages
+      }
+    }
+  })
 
   return redirect(`/users/${params.username}/notes/${params.noteId}`)
 }
