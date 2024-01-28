@@ -9,7 +9,7 @@ import { Form, Link, useLoaderData } from '@remix-run/react'
 import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
 
 import { Button, GeneralErrorBoundary, floatingToolbarClassName } from '~/components'
-import { db, getNoteImgSrc, invariantResponse, prisma, validateCSRF } from '~/utils'
+import { getNoteImgSrc, invariantResponse, prisma, validateCSRF } from '~/utils'
 
 import { type loader as notesLoader } from './notes'
 
@@ -40,7 +40,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   invariantResponse(intent !== 'delete', 'Invalid intent')
 
-  db.note.delete({ where: { id: { equals: params.noteId } } })
+  await prisma.note.delete({ where: { id: params.noteId } })
 
   return redirect(`/users/${params.username}/notes`)
 }
