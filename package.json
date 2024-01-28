@@ -19,6 +19,7 @@
     "@conform-to/zod": "0.9.1",
     "@heroicons/react": "2.1.1",
     "@mswjs/data": "^0.16.1",
+    "@prisma/client": "5.8.1",
     "@remix-run/css-bundle": "2.5.1",
     "@remix-run/node": "2.5.1",
     "@remix-run/react": "2.5.1",
@@ -48,10 +49,15 @@
     "postcss": "8.4.33",
     "prettier": "3.2.4",
     "prettier-plugin-tailwindcss": "0.5.11",
+    "prisma": "5.8.1",
     "remix-flat-routes": "0.6.4",
+    "tsx": "4.7.0",
     "typescript": "5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   }
 }
