@@ -1,15 +1,35 @@
-/**
- * Don't worry too much about this file. It's just an in-memory "database"
- * for the purposes of our workshop. The data modeling workshop will cover
- * the proper database.
- */
 import { factory, manyOf, nullable, oneOf, primaryKey } from '@mswjs/data'
+import { PrismaClient } from '@prisma/client'
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 
 import { singleton } from './singleton.server'
+
+const prisma = singleton('prisma', () => {
+  const logThreshold = 0
+  const client = new PrismaClient({
+    log: [
+      { level: 'query', emit: 'event' },
+      { level: 'error', emit: 'stdout' },
+      { level: 'info', emit: 'stdout' },
+      { level: 'warn', emit: 'stdout' }
+    ]
+  })
+
+  client.$on('query', async e => {
+    if (e.duration < logThreshold) return
+
+    console.info(`prisma:query - ${e.duration}ms - ${e.query}`)
+  })
+
+  client.$connect()
+
+  return client
+})
+
+export { prisma }
 
 const getId = () => crypto.randomBytes(16).toString('hex').slice(0, 8)
 
