@@ -23,15 +23,28 @@ import {
   MAX_UPLOAD_SIZE,
   floatingToolbarClassName
 } from '~/components'
-import { db, invariantResponse, updateNote, useIsSubmitting, validateCSRF } from '~/utils'
+import { invariantResponse, prisma, useIsSubmitting, validateCSRF } from '~/utils'
 
 const titleMaxLength: number = 100
 const contentMaxLength: number = 1000
 
+type ImageFieldset = z.infer<typeof ImageFieldsetSchema>
+
+const imageHasFile = (
+  image: ImageFieldset
+): image is ImageFieldset & { file: NonNullable<ImageFieldset['file']> } => {
+  return Boolean(image.file?.size && image.file?.size > 0)
+}
+const imageHasId = (
+  image: ImageFieldset
+): image is ImageFieldset & { id: NonNullable<ImageFieldset['id']> } => {
+  return image.id != null
+}
+
 const NoteEditorSchema = z.object({
   title: z.string().min(1).max(titleMaxLength),
   content: z.string().min(1).max(contentMaxLength),
-  images: z.array(ImageFieldsetSchema)
+  images: z.array(ImageFieldsetSchema).max(5).optional()
 })
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -44,7 +57,36 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   await validateCSRF(formData, request.headers)
 
-  const submission = parse(formData, { schema: NoteEditorSchema })
+  const submission = await parse(formData, {
+    schema: NoteEditorSchema.transform(async ({ images = [], ...data }) => {
+      return {
+        ...data,
+        imageUpdates: await Promise.all(
+          images.filter(imageHasId).map(async index =>
+            imageHasFile(index)
+              ? {
+                  id: index.id,
+                  altText: index.altText,
+                  contentType: index.file.type,
+                  blob: Buffer.from(await index.file.arrayBuffer())
+                }
+              : { id: index.id, altText: index.altText }
+          )
+        ),
+        newImages: await Promise.all(
+          images
+            .filter(imageHasFile)
+            .filter(image => !image.id)
+            .map(async img => ({
+              altText: img.altText,
+              contentType: img.file.type,
+              blob: Buffer.from(await img.file.arrayBuffer())
+            }))
+        )
+      }
+    }),
+    async: true
+  })
 
   if (submission.intent !== 'submit') {
     return json({ status: 'idle', submission } as const)
@@ -54,25 +96,22 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return json({ status: 'error', submission } as const, { status: 400 })
   }
 
-  const { title, content, images } = submission.value
-  // 🐨 now just pass the whole images array here.
-  await updateNote({ id: params.noteId, title, content, images })
-
   return redirect(`/users/${params.username}/notes/${params.noteId}`)
 }
 
-export const loader = ({ params }: LoaderFunctionArgs) => {
-  const note = db.note.findFirst({ where: { id: { equals: params.noteId } } })
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const note = await prisma.note.findFirst({
+    where: { id: params.noteId },
+    select: {
+      title: true,
+      content: true,
+      images: { select: { id: true, altText: true } }
+    }
+  })
 
   invariantResponse(note, 'Note not found', { status: 404 })
 
-  return json({
-    note: {
-      title: note.title,
-      content: note.content,
-      images: note.images.map(image => ({ id: image.id, altText: image.altText }))
-    }
-  })
+  return json({ note })
 }
 
 const NoteEditRoute = () => {
