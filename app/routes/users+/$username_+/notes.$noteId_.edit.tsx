@@ -24,7 +24,7 @@ import {
   MAX_UPLOAD_SIZE,
   floatingToolbarClassName
 } from '~/components'
-import { invariantResponse, prisma, useIsSubmitting, validateCSRF } from '~/utils'
+import { invariantResponse, prisma, useFormState, validateCSRF } from '~/utils'
 
 const titleMaxLength: number = 100
 const contentMaxLength: number = 1000
@@ -138,7 +138,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 const NoteEditRoute = () => {
   const { note } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
-  const isSubmitting = useIsSubmitting()
+  const isSubmitting = useFormState()
 
   const [form, fields] = useForm({
     id: 'note-editor',
