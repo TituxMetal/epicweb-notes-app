@@ -13,7 +13,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData
+  useLoaderData,
+  useMatches
 } from '@remix-run/react'
 import os from 'node:os'
 import { type ReactNode } from 'react'
@@ -24,7 +25,7 @@ import faviconAssetUrl from '~/assets/favicon.svg'
 import fontStylesheetUrl from '~/styles/font.css'
 import tailwindStylesheetLink from '~/styles/tailwind.css'
 
-import { GeneralErrorBoundary } from './components'
+import { GeneralErrorBoundary, SearchBar } from './components'
 import { csrf, honeypot } from './utils'
 
 export const links: LinksFunction = () => {
@@ -74,15 +75,22 @@ const Document = ({ children }: { children: ReactNode }) => {
 
 const App = () => {
   const data = useLoaderData<typeof loader>()
+  const matches = useMatches()
+  const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
 
   return (
     <Document>
       <header className='container mx-auto py-6'>
-        <nav className='flex justify-between'>
+        <nav className='flex items-center justify-between gap-6'>
           <Link to='/'>
             <div className='font-light'>epic</div>
             <div className='font-bold'>notes</div>
           </Link>
+          {isOnSearchPage ? null : (
+            <div className='ml-auto max-w-sm flex-1'>
+              <SearchBar status='idle' />
+            </div>
+          )}
           <Link className='underline' to='/users/kody/notes'>
             Kody's Notes
           </Link>
