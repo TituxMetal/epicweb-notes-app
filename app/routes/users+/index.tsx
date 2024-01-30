@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect('/users')
   }
 
-  const like = `%${searchTerm ?? 'a'}%`
+  const like = `%${searchTerm ?? ''}%`
   const rawUsers = await prisma.$queryRaw`
     SELECT User.id, User.username, User.name, UserImage.id AS imageId
     FROM User
