@@ -1,5 +1,8 @@
-import { useFormAction, useNavigation } from '@remix-run/react'
+import { useFetcher, useFormAction, useLoaderData, useNavigation } from '@remix-run/react'
 import { useEffect, useMemo, useRef } from 'react'
+
+import { themeFetcherKey } from '~/components'
+import { type loader as rootLoader } from '~/root'
 
 const FORM_METHODS = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'] as const
 type FormMethod = (typeof FORM_METHODS)[number]
@@ -89,4 +92,20 @@ export const useDebounce = <
     () => debounce((...args: Parameters<Callback>) => callbackRef.current(...args), delay),
     [delay]
   )
+}
+
+/**
+ * Gets the current theme from the loader data, falling back to an optimistic
+ * theme updated by the theme fetcher if it exists.
+ */
+export const useTheme = () => {
+  const data = useLoaderData<typeof rootLoader>()
+  const themeFetcher = useFetcher({ key: themeFetcherKey })
+  const optimisticTheme = themeFetcher?.formData?.get('theme')
+
+  if (optimisticTheme === 'light' || optimisticTheme === 'dark') {
+    return optimisticTheme
+  }
+
+  return data.theme
 }
