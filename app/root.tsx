@@ -1,6 +1,8 @@
+import { parse } from '@conform-to/zod'
 import { cssBundleHref } from '@remix-run/css-bundle'
 import {
   json,
+  type ActionFunctionArgs,
   type LinksFunction,
   type LoaderFunctionArgs,
   type MetaFunction
@@ -25,8 +27,10 @@ import faviconAssetUrl from '~/assets/favicon.svg'
 import fontStylesheetUrl from '~/styles/font.css'
 import tailwindStylesheetLink from '~/styles/tailwind.css'
 
-import { GeneralErrorBoundary, SearchBar } from './components'
-import { csrf, honeypot } from './utils'
+import { GeneralErrorBoundary, SearchBar, ThemeFormSchema, ThemeSwitch } from './components'
+import { type Theme } from './types'
+import { csrf, getTheme, honeypot, invariantResponse, setTheme } from './utils'
+import { useTheme } from './utils/hooks'
 
 export const links: LinksFunction = () => {
   return [
@@ -44,19 +48,38 @@ export const meta: MetaFunction = () => {
   ]
 }
 
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData()
+  invariantResponse(formData.get('intent') === 'update-theme', 'Invalid intent', { status: 400 })
+  const submission = parse(formData, {
+    schema: ThemeFormSchema
+  })
+  if (submission.intent !== 'submit') {
+    return json({ status: 'success', submission } as const)
+  }
+  if (!submission.value) {
+    return json({ status: 'error', submission } as const, { status: 400 })
+  }
+
+  const { theme } = submission.value
+  const responseInit = { headers: { 'set-cookie': setTheme(theme) } }
+
+  return json({ success: true, submission }, responseInit)
+}
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const honeyProps = honeypot.getInputProps()
   const [csrfToken, csrfCookieHeader] = await csrf.commitToken(request)
 
   return json(
-    { username: os.userInfo().username, honeyProps, csrfToken },
+    { username: os.userInfo().username, theme: getTheme(request), honeyProps, csrfToken },
     { headers: csrfCookieHeader ? { 'set-cookie': csrfCookieHeader } : {} }
   )
 }
 
-const Document = ({ children }: { children: ReactNode }) => {
+const Document = ({ children, theme }: { children: ReactNode; theme: Theme }) => {
   return (
-    <html lang='en' className='h-full overflow-x-hidden'>
+    <html lang='en' className={`${theme} h-full overflow-x-hidden`}>
       <head>
         <Meta />
         <meta charSet='utf-8' />
@@ -75,11 +98,12 @@ const Document = ({ children }: { children: ReactNode }) => {
 
 const App = () => {
   const data = useLoaderData<typeof loader>()
+  const theme = data.theme
   const matches = useMatches()
   const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
 
   return (
-    <Document>
+    <Document theme={theme}>
       <header className='container mx-auto py-6'>
         <nav className='flex items-center justify-between gap-6'>
           <Link to='/'>
@@ -105,6 +129,7 @@ const App = () => {
           <div className='font-bold'>notes</div>
         </Link>
         <p>Built with ♥️ by {data.username}</p>
+        <ThemeSwitch userPreference={theme} />
       </div>
     </Document>
   )
@@ -123,8 +148,10 @@ const AppWithProviders = () => {
 }
 
 export const ErrorBoundary = () => {
+  const theme = useTheme()
+
   return (
-    <Document>
+    <Document theme={theme}>
       <div className='flex-1'>
         <GeneralErrorBoundary />
       </div>
