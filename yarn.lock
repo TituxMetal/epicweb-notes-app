@@ -382,22 +382,17 @@
   dependencies:
     statuses "^2.0.1"
 
-"@conform-to/dom@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@conform-to/dom/-/dom-0.9.1.tgz#6ea8a218ce47e38e09b94a60ec85381206c5a40e"
-  integrity sha512-+T6QgpLDPZ29j4y5nWW61WMe8qj0cQBymyzbi5sq1f3CcBO3wBbR0VPI7mbm+rLoErHWM3ghhdNlIkw0UPoLLA==
-
 "@conform-to/dom@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@conform-to/dom/-/dom-1.0.0.tgz#09fe2f451890d0bff6b29cfa9105784c77b7cfcf"
   integrity sha512-KG0Ee2G9BcFLdqtpcexdht48QNM2F9ddAyJFSHNG4V3e2QOmVEAM7M6R/iWWykpTVQljWmKd2J7U4ep/7/XRrA==
 
-"@conform-to/react@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@conform-to/react/-/react-0.9.1.tgz#343d2aa03b9a0d004efb0896c08443e60789ced7"
-  integrity sha512-SibYHk86IFh60LRPk4aJHJOgyLTgb3JYphKvG4vcemyuntdOwncd5YM/GDoccVzeCTmJi4Os/fDtOOAaDcSa9w==
+"@conform-to/react@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@conform-to/react/-/react-1.0.0.tgz#98fd6f29cf4ac7cb08c7419d7115b4050d22f2c5"
+  integrity sha512-TlMMmNDhYJhKJP9EOyV2RbUEqjwR68GTO1KaO3LOI4WeVLx7aZ78k73qIuFMRjjZgsWOL4edD1CZtkKBRztmqw==
   dependencies:
-    "@conform-to/dom" "0.9.1"
+    "@conform-to/dom" "1.0.0"
 
 "@conform-to/zod@1.0.0":
   version "1.0.0"
