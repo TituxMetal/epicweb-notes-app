@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@conform-to/react": "0.9.1",
-    "@conform-to/zod": "1.0.0",
+    "@conform-to/zod": "0.9.1",
     "@heroicons/react": "2.1.1",
-    "@mswjs/data": "^0.16.1",
+    "@mswjs/data": "0.16.1",
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "5.8.1",
     "@remix-run/css-bundle": "2.5.1",
