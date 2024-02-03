@@ -387,6 +387,11 @@
   resolved "https://registry.yarnpkg.com/@conform-to/dom/-/dom-0.9.1.tgz#6ea8a218ce47e38e09b94a60ec85381206c5a40e"
   integrity sha512-+T6QgpLDPZ29j4y5nWW61WMe8qj0cQBymyzbi5sq1f3CcBO3wBbR0VPI7mbm+rLoErHWM3ghhdNlIkw0UPoLLA==
 
+"@conform-to/dom@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@conform-to/dom/-/dom-1.0.0.tgz#09fe2f451890d0bff6b29cfa9105784c77b7cfcf"
+  integrity sha512-KG0Ee2G9BcFLdqtpcexdht48QNM2F9ddAyJFSHNG4V3e2QOmVEAM7M6R/iWWykpTVQljWmKd2J7U4ep/7/XRrA==
+
 "@conform-to/react@0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@conform-to/react/-/react-0.9.1.tgz#343d2aa03b9a0d004efb0896c08443e60789ced7"
@@ -394,10 +399,12 @@
   dependencies:
     "@conform-to/dom" "0.9.1"
 
-"@conform-to/zod@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@conform-to/zod/-/zod-0.9.1.tgz#63014db3d2ce701d7b9e174308cc735530de7760"
-  integrity sha512-4hWBGzRpSd4RrlBFRXjS6QQ2MWFpMZDbDwz8H/xiq38Xl5yaL1RSZMhOJ4pmsmy8CIKghs78qvaD8ltTFlrNvQ==
+"@conform-to/zod@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@conform-to/zod/-/zod-1.0.0.tgz#a036c4401c79c70a6e7e23e374e481b77efc18f5"
+  integrity sha512-oWOfqEpCRZpOY7mxJe73oluy6Fvjbw8tYhXfDqZqFb0ePf+bFkF7g1Wzfkgz76LvWJHb0PNykn+o5f423aqb+w==
+  dependencies:
+    "@conform-to/dom" "1.0.0"
 
 "@emotion/hash@^0.9.0":
   version "0.9.1"
