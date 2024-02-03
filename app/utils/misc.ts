@@ -43,3 +43,22 @@ export const getErrorMessage = (error: unknown) => {
 
   return 'Unknown Error'
 }
+
+/**
+ * Combines multiple HTTP header objects into one Headers instance.
+ * Loops through each passed in header object, appending keys and values to a combined Headers instance.
+ * Skips over any null/undefined headers.
+ */
+export const combineHeaders = (...headers: Array<ResponseInit['headers'] | null>) => {
+  const combined = new Headers()
+
+  for (const header of headers) {
+    if (!header) continue
+
+    for (const [key, value] of new Headers(header).entries()) {
+      combined.append(key, value)
+    }
+  }
+
+  return combined
+}
