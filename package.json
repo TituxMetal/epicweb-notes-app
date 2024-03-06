@@ -57,7 +57,7 @@
     "prisma": "5.10.2",
     "remix-flat-routes": "0.6.4",
     "tsx": "4.7.1",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "engines": {
     "node": ">=18.0.0"
