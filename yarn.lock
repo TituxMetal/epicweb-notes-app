@@ -6584,10 +6584,10 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-tsx@4.9.1:
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/tsx/-/tsx-4.9.1.tgz#e8eb1ce2766ce9067d577fba237a3cf884b229fa"
-  integrity sha512-CqSJaYyZ6GEqnGtPuMPQHvUwRGU6VHSVF+RDxoOmRg/XD4aF0pD973tKhoUYGQtdcoCHcSOGk34ioFaP+vYcMQ==
+tsx@4.9.4:
+  version "4.9.4"
+  resolved "https://registry.yarnpkg.com/tsx/-/tsx-4.9.4.tgz#a7c37d944f0d88743c8b6bb030adb3cfc488435a"
+  integrity sha512-TlSJTVn2taGGDgdV3jAqCj7WQ/CafCB5p4SbG7W2Bl/0AJWH1ShJlBbc0y2lOFTjQEVAAULSTlmehw/Mwv3S/Q==
   dependencies:
     esbuild "~0.20.2"
     get-tsconfig "^4.7.3"
