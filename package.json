@@ -56,7 +56,7 @@
     "prettier-plugin-tailwindcss": "0.6.2",
     "prisma": "5.12.1",
     "remix-flat-routes": "0.6.4",
-    "tsx": "4.13.3",
+    "tsx": "4.14.0",
     "typescript": "5.4.5"
   },
   "engines": {
