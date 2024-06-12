@@ -52,7 +52,7 @@
     "eslint": "9.4.0",
     "eslint-config-prettier": "9.1.0",
     "postcss": "8.4.38",
-    "prettier": "3.3.1",
+    "prettier": "3.3.2",
     "prettier-plugin-tailwindcss": "0.6.3",
     "prisma": "5.12.1",
     "remix-flat-routes": "0.6.4",
