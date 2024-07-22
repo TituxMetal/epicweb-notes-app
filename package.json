@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",
-    "@flydotio/dockerfile": "0.5.5",
+    "@flydotio/dockerfile": "0.5.8",
     "@remix-run/dev": "2.10.3",
     "@remix-run/eslint-config": "2.10.3",
     "@tailwindcss/forms": "0.5.7",
