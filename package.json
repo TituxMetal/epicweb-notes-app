@@ -40,7 +40,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.0.3",
+    "@faker-js/faker": "9.1.0",
     "@flydotio/dockerfile": "0.5.5",
     "@remix-run/dev": "2.13.1",
     "@remix-run/eslint-config": "2.13.1",
