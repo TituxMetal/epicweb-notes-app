@@ -6040,12 +6040,12 @@ remix-flat-routes@0.8.4:
     fs-extra "^11.2.0"
     minimatch "^10.0.1"
 
-remix-utils@8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-8.0.0.tgz#96386e67fd4de9c163cc43e83e8cd9bb84dfe5a9"
-  integrity sha512-vrs8Iytnuwi+KF+VYOPT3vzDX7cLbys897pwzLpMzLjOXJQ/S60dApHCmQ9cPWH3XHRgvaoJjZ6+sMGaax4fbg==
+remix-utils@8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-8.1.0.tgz#f317f3e929c75da69c8b1ce80b25a1b0b09651ec"
+  integrity sha512-k44K4FOPyMv6QQ+yaQrCrXdnzkKE1b86ZUODAK5fvmWsmi7ntZAAA+Ods+nzNAxFEAPDTreCzl7cGWnxWd6ibw==
   dependencies:
-    type-fest "^4.30.0"
+    type-fest "^4.33.0"
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -6810,10 +6810,10 @@ type-fest@^0.21.3:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.21.3.tgz#d260a24b0198436e133fa26a524a6d65fa3b2e37"
   integrity sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==
 
-type-fest@^4.30.0:
-  version "4.30.1"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.30.1.tgz#120b9e15177310ec4e9d5d6f187d86c0f4b55e0e"
-  integrity sha512-ojFL7eDMX2NF0xMbDwPZJ8sb7ckqtlAi1GsmgsFXvErT9kFTk1r0DuQKvrCh73M6D4nngeHJmvogF9OluXs7Hw==
+type-fest@^4.33.0:
+  version "4.33.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.33.0.tgz#2da0c135b9afa76cf8b18ecfd4f260ecd414a432"
+  integrity sha512-s6zVrxuyKbbAsSAD5ZPTB77q4YIdRctkTbJ2/Dqlinwz+8ooH2gd+YA7VA6Pa93KML9GockVvoxjZ2vHP+mu8g==
 
 type-fest@^4.9.0:
   version "4.10.2"
