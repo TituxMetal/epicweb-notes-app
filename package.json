@@ -20,7 +20,7 @@
     "@heroicons/react": "2.2.0",
     "@mswjs/data": "0.16.2",
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "6.2.1",
+    "@prisma/client": "6.3.0",
     "@remix-run/css-bundle": "2.15.0",
     "@remix-run/node": "2.15.0",
     "@remix-run/react": "2.15.0",
@@ -54,7 +54,7 @@
     "postcss": "8.5.1",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "0.6.11",
-    "prisma": "6.2.1",
+    "prisma": "6.3.0",
     "remix-flat-routes": "0.8.4",
     "tsx": "4.15.7",
     "typescript": "5.7.3"
